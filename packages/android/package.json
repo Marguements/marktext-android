@@ -1,0 +1,20 @@
+{
+  "name": "marktext-android",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MarkText for Android: the Muya editor engine in a native WebView shell",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build:web": "vite build",
+    "typecheck": "pnpm --filter @muyajs/core build:types && tsc --noEmit"
+  },
+  "dependencies": {
+    "@muyajs/core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16"
+  }
+}

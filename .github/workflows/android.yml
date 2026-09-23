@@ -1,0 +1,88 @@
+name: Android
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'packages/android/**'
+      - 'packages/muya/src/**'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/android.yml'
+  push:
+    branches: [develop]
+    paths:
+      - 'packages/android/**'
+      - 'packages/muya/src/**'
+      - '.github/workflows/android.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      MARKTEXT_VERSION_CODE: ${{ github.run_number }}
+      MARKTEXT_VERSION_NAME: 0.1.${{ github.run_number }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+      - name: Typecheck web layer
+        run: pnpm --filter marktext-android typecheck
+
+      - name: Build web layer
+        run: pnpm --filter marktext-android build:web
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      # Optional: sign with your own key by adding these repository secrets.
+      # Without them the build uses the committed dev key (app/marktext-dev.keystore).
+      - name: Decode release keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.MARKTEXT_KEYSTORE_BASE64 }}
+        if: env.KEYSTORE_BASE64 != ''
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/release.keystore"
+          echo "MARKTEXT_KEYSTORE_FILE=$RUNNER_TEMP/release.keystore" >> "$GITHUB_ENV"
+
+      - name: Build APK
+        working-directory: packages/android
+        env:
+          MARKTEXT_KEYSTORE_PASSWORD: ${{ secrets.MARKTEXT_KEYSTORE_PASSWORD }}
+          MARKTEXT_KEY_ALIAS: ${{ secrets.MARKTEXT_KEY_ALIAS }}
+          MARKTEXT_KEY_PASSWORD: ${{ secrets.MARKTEXT_KEY_PASSWORD }}
+        run: ./gradlew --no-daemon assembleRelease
+
+      - name: Rename APK
+        run: |
+          mkdir -p dist
+          cp packages/android/app/build/outputs/apk/release/app-release.apk "dist/MarkText-$MARKTEXT_VERSION_NAME.apk"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MarkText-${{ env.MARKTEXT_VERSION_NAME }}-apk
+          path: dist/*.apk
+
+      # A rolling pre-release whose APK can be downloaded straight from a phone:
+      # https://github.com/<owner>/<repo>/releases/tag/android-latest
+      - name: Publish android-latest release
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete android-latest --cleanup-tag --yes || true
+          gh release create android-latest dist/*.apk \
+            --prerelease \
+            --target "$GITHUB_SHA" \
+            --title "MarkText for Android $MARKTEXT_VERSION_NAME" \
+            --notes "Built from $GITHUB_SHA. Download the APK on your phone and open it to install."

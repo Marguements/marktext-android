@@ -130,6 +130,12 @@ root holds only shared tooling and CI-facing scripts.
                             wired in playwright.config.ts but deferred
                             until BACKLOG Phase 3 lands engine-independent
                             specs.
+    android/                MarkText for Android (name: "marktext-android").
+                            Vite-built web layer (web/) running @muyajs/core
+                            in a WebView, plus a Gradle/Kotlin shell (app/)
+                            for files, sharing and system UI. Built by
+                            .github/workflows/android.yml; see
+                            packages/android/README.md.
     website/                marktext-website (Vite + React 18). Standalone
                             toolchain; depends on @muyajs/core from npm,
                             not on the local muyajs package. Not part of

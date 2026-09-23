@@ -1,0 +1,606 @@
+/* App chrome for the Android shell. Muya's own stylesheet (imported by the
+   engine) reads the kebab-case tokens overridden per theme below. */
+
+:root {
+  --app-bg: #ffffff;
+  --app-surface: #f6f7f8;
+  --app-fg: #2c2f33;
+  --app-muted: #6b737b;
+  --app-border: rgb(0 0 0 / 10%);
+  --app-accent: #21b56f;
+  --app-accent-soft: rgb(33 181 111 / 14%);
+  --app-pressed: rgb(0 0 0 / 7%);
+  --app-bar-height: 52px;
+  --app-toolbar-height: 48px;
+
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --app-bg: #1e1f22;
+  --app-surface: #26282c;
+  --app-fg: #d6d8dc;
+  --app-muted: #9097a0;
+  --app-border: rgb(255 255 255 / 10%);
+  --app-accent: #3ecf8e;
+  --app-accent-soft: rgb(62 207 142 / 16%);
+  --app-pressed: rgb(255 255 255 / 8%);
+
+  /* Muya tokens */
+  --theme-color: #3ecf8e;
+  --highlight-color: rgb(62 207 142 / 35%);
+  --selection-color: rgb(90 150 230 / 35%);
+  --editor-color: #c9ccd1;
+  --editor-color-80: #e3e5e8;
+  --editor-color-50: #8f959d;
+  --editor-color-30: #5f656d;
+  --editor-color-10: #3a3d42;
+  --editor-color-04: #2a2c30;
+  --editor-bg-color: #1e1f22;
+  --delete-color: #ff7b7b;
+  --icon-color: #a4abb4;
+  --code-block-bg-color: rgb(255 255 255 / 5%);
+  --table-border-color: #3a3d42;
+  --input-bg-color: rgb(255 255 255 / 8%);
+  --button-bg-color: #2c2e33;
+  --button-border: 1px solid #44474d;
+  --button-bg-color-hover: #34373c;
+  --float-bg-color: #2a2c30;
+  --float-hover-color: rgb(255 255 255 / 6%);
+  --float-border-color: rgb(255 255 255 / 12%);
+  --float-shadow:
+    rgb(0 0 0 / 30%) 0 0 0 1px, rgb(0 0 0 / 35%) 0 3px 6px, rgb(0 0 0 / 40%) 0 9px 24px;
+  --link-color: #6ea8fe;
+
+  color-scheme: dark;
+}
+
+/* Prism tokens for dark code blocks (Muya bundles only a light theme). */
+:root[data-theme='dark'] .token.comment,
+:root[data-theme='dark'] .token.prolog,
+:root[data-theme='dark'] .token.doctype,
+:root[data-theme='dark'] .token.cdata {
+  color: #7f848e;
+}
+:root[data-theme='dark'] .token.punctuation {
+  color: #abb2bf;
+}
+:root[data-theme='dark'] .token.property,
+:root[data-theme='dark'] .token.tag,
+:root[data-theme='dark'] .token.boolean,
+:root[data-theme='dark'] .token.number,
+:root[data-theme='dark'] .token.constant,
+:root[data-theme='dark'] .token.symbol,
+:root[data-theme='dark'] .token.deleted {
+  color: #d19a66;
+}
+:root[data-theme='dark'] .token.selector,
+:root[data-theme='dark'] .token.attr-name,
+:root[data-theme='dark'] .token.string,
+:root[data-theme='dark'] .token.char,
+:root[data-theme='dark'] .token.builtin,
+:root[data-theme='dark'] .token.inserted {
+  color: #98c379;
+}
+:root[data-theme='dark'] .token.operator,
+:root[data-theme='dark'] .token.entity,
+:root[data-theme='dark'] .token.url {
+  color: #56b6c2;
+  background: none;
+}
+:root[data-theme='dark'] .token.atrule,
+:root[data-theme='dark'] .token.attr-value,
+:root[data-theme='dark'] .token.keyword {
+  color: #c678dd;
+}
+:root[data-theme='dark'] .token.function,
+:root[data-theme='dark'] .token.class-name {
+  color: #61afef;
+}
+:root[data-theme='dark'] .token.regex,
+:root[data-theme='dark'] .token.important,
+:root[data-theme='dark'] .token.variable {
+  color: #e5c07b;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  color: var(--app-fg);
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  background: var(--app-bg);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+svg {
+  fill: currentColor;
+}
+
+/* ---------- App bar ---------- */
+
+.appbar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 2px;
+  height: var(--app-bar-height);
+  padding: 0 4px;
+  background: var(--app-surface);
+  border-bottom: 1px solid var(--app-border);
+}
+
+.appbar-title {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 0 6px;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+#doc-title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.dirty-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  background: var(--app-accent);
+  border-radius: 50%;
+}
+
+.icon-btn {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  color: var(--app-fg);
+  background: none;
+  border: none;
+  border-radius: 50%;
+}
+
+.icon-btn.small {
+  width: 36px;
+  height: 36px;
+}
+
+.icon-btn:active,
+.tool-btn:active,
+.drawer-item:active,
+.sheet-item:active,
+.text-btn:active {
+  background: var(--app-pressed);
+}
+
+.icon-btn.active {
+  color: var(--app-accent);
+  background: var(--app-accent-soft);
+}
+
+.text-btn {
+  flex: none;
+  padding: 8px 12px;
+  color: var(--app-accent);
+  font-weight: 600;
+  background: none;
+  border: none;
+  border-radius: 8px;
+}
+
+/* ---------- Find bar ---------- */
+
+.findbar {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 8px;
+  background: var(--app-surface);
+  border-bottom: 1px solid var(--app-border);
+}
+
+.findbar-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.findbar input[type='search'],
+.findbar input[type='text'] {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  padding: 0 10px;
+  color: var(--app-fg);
+  font-size: 16px;
+  background: var(--app-bg);
+  border: 1px solid var(--app-border);
+  border-radius: 8px;
+  outline: none;
+}
+
+.findbar input:focus {
+  border-color: var(--app-accent);
+}
+
+.find-count {
+  min-width: 3em;
+  color: var(--app-muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.findbar-options {
+  gap: 14px;
+  padding: 0 2px;
+  color: var(--app-muted);
+  font-size: 13px;
+}
+
+.findbar-options input {
+  accent-color: var(--app-accent);
+}
+
+/* ---------- Editor ---------- */
+
+.scroller {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: var(--editor-bg-color, var(--app-bg));
+  -webkit-overflow-scrolling: touch;
+}
+
+#editor,
+.mu-editor {
+  box-sizing: border-box;
+  min-height: 100%;
+  padding: 12px 0 40vh;
+  outline: none;
+}
+
+/* Muya reserves 50px on each side for the paragraph drag handle, which is a
+   lot of a 412px-wide phone screen. Keep just enough on the left for it. */
+.mu-container {
+  padding-right: 18px;
+  padding-left: 30px;
+}
+
+.source {
+  flex: 1;
+  min-height: 0;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 16px 18px;
+  color: var(--app-fg);
+  font:
+    15px/1.55 ui-monospace,
+    'Roboto Mono',
+    'Droid Sans Mono',
+    monospace;
+  background: var(--app-bg);
+  border: none;
+  outline: none;
+  resize: none;
+}
+
+/* ---------- Formatting toolbar ---------- */
+
+.toolbar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 2px;
+  height: var(--app-toolbar-height);
+  padding: 0 4px;
+  overflow-x: auto;
+  background: var(--app-surface);
+  border-top: 1px solid var(--app-border);
+  scrollbar-width: none;
+}
+
+.toolbar::-webkit-scrollbar {
+  display: none;
+}
+
+.toolbar.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.tool-btn {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 40px;
+  padding: 0;
+  color: var(--app-fg);
+  font-size: 18px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+}
+
+.tool-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.tool-bold {
+  font-weight: 800;
+}
+
+.tool-italic {
+  font-style: italic;
+  font-family: Georgia, serif;
+}
+
+.tool-strike {
+  text-decoration: line-through;
+}
+
+.tool-code {
+  font-family: ui-monospace, monospace;
+  font-weight: 700;
+}
+
+.tool-mark {
+  font-size: 15px;
+  font-weight: 700;
+  background: linear-gradient(transparent 55%, rgb(255 213 0 / 45%) 55%);
+}
+
+.tool-heading {
+  font-weight: 800;
+}
+
+.tool-insert {
+  font-size: 24px;
+}
+
+/* ---------- Drawer ---------- */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: rgb(0 0 0 / 38%);
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 21;
+  box-sizing: border-box;
+  width: min(84vw, 320px);
+  padding: 0 0 16px;
+  overflow-y: auto;
+  background: var(--app-bg);
+  box-shadow: 0 0 24px rgb(0 0 0 / 25%);
+  transform: translateX(-105%);
+  transition: transform 0.2s ease;
+}
+
+.drawer.open {
+  transform: none;
+}
+
+.drawer-header {
+  padding: 20px 20px 14px;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.drawer-brand {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.drawer-sub {
+  margin-top: 4px;
+  color: var(--app-muted);
+  font-size: 13px;
+}
+
+.drawer-section {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.drawer-section:last-child {
+  border-bottom: none;
+}
+
+.drawer-label {
+  padding: 8px 20px 4px;
+  color: var(--app-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.drawer-item {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 20px;
+  overflow: hidden;
+  font-size: 15px;
+  white-space: nowrap;
+  text-align: left;
+  text-overflow: ellipsis;
+  background: none;
+  border: none;
+}
+
+.drawer-item svg {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  color: var(--app-muted);
+}
+
+/* ---------- Sheets & dialogs ---------- */
+
+.sheet {
+  box-sizing: border-box;
+  width: min(92vw, 440px);
+  max-height: 80vh;
+  padding: 0;
+  color: var(--app-fg);
+  background: var(--app-bg);
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgb(0 0 0 / 30%);
+}
+
+.sheet::backdrop {
+  background: rgb(0 0 0 / 38%);
+}
+
+.sheet-title {
+  padding: 18px 20px 8px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.sheet-body {
+  padding: 0 0 8px;
+}
+
+.sheet-item {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 46px;
+  padding: 0 16px;
+  overflow: hidden;
+  font-size: 15px;
+  white-space: nowrap;
+  text-align: left;
+  text-overflow: ellipsis;
+  background: none;
+  border: none;
+}
+
+.sheet-empty {
+  margin: 8px 20px 16px;
+  color: var(--app-muted);
+}
+
+.settings-form {
+  padding: 0 20px 12px;
+}
+
+.setting {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 0;
+  font-size: 15px;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.setting.toggle {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.setting output {
+  color: var(--app-muted);
+}
+
+.setting select {
+  height: 36px;
+  padding: 0 8px;
+  color: var(--app-fg);
+  font-size: 15px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 8px;
+}
+
+.setting input {
+  accent-color: var(--app-accent);
+}
+
+.setting input[type='checkbox'] {
+  width: 20px;
+  height: 20px;
+}
+
+.sheet-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 10px;
+}
+
+/* ---------- Snackbar ---------- */
+
+.snackbar {
+  position: fixed;
+  right: 16px;
+  bottom: calc(var(--app-toolbar-height) + 16px);
+  left: 16px;
+  z-index: 30;
+  padding: 12px 16px;
+  color: #fff;
+  font-size: 14px;
+  background: #323232;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 30%);
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+  pointer-events: none;
+}
+
+.snackbar.show {
+  opacity: 1;
+  transform: none;
+}

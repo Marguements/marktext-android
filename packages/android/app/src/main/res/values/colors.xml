@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Mirror --app-surface in web/src/style.css so the system bar areas blend in. -->
+    <color name="surface">#FFF6F7F8</color>
+    <color name="launcher_background">#FF21B56F</color>
+</resources>
