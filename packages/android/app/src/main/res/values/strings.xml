@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MarkText</string>
+    <string name="error_webview_outdated">MarkText needs a newer Android System WebView. Update it from the Play Store and reopen the app.</string>
+</resources>

@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content"
+    />
+    <meta name="color-scheme" content="light dark" />
+    <title>MarkText</title>
+  </head>
+  <body>
+    <header class="appbar">
+      <button
+        class="icon-btn"
+        id="btn-menu"
+        type="button"
+        aria-label="Menu"
+        data-icon="menu"
+      ></button>
+      <div class="appbar-title">
+        <span id="doc-title">Untitled.md</span>
+        <span id="doc-dirty" class="dirty-dot" hidden aria-label="Unsaved changes"></span>
+      </div>
+      <button
+        class="icon-btn"
+        id="btn-undo"
+        type="button"
+        aria-label="Undo"
+        data-icon="undo"
+      ></button>
+      <button
+        class="icon-btn"
+        id="btn-redo"
+        type="button"
+        aria-label="Redo"
+        data-icon="redo"
+      ></button>
+      <button
+        class="icon-btn"
+        id="btn-find"
+        type="button"
+        aria-label="Find and replace"
+        data-icon="search"
+      ></button>
+      <button
+        class="icon-btn"
+        id="btn-source"
+        type="button"
+        aria-label="Toggle source mode"
+        data-icon="code"
+      ></button>
+      <button
+        class="icon-btn"
+        id="btn-save"
+        type="button"
+        aria-label="Save"
+        data-icon="save"
+      ></button>
+    </header>
+
+    <div class="findbar" id="findbar" hidden>
+      <div class="findbar-row">
+        <input
+          id="find-input"
+          type="search"
+          placeholder="Find"
+          autocomplete="off"
+          enterkeyhint="search"
+        />
+        <span id="find-count" class="find-count"></span>
+        <button
+          class="icon-btn small"
+          id="find-prev"
+          type="button"
+          aria-label="Previous match"
+          data-icon="up"
+        ></button>
+        <button
+          class="icon-btn small"
+          id="find-next"
+          type="button"
+          aria-label="Next match"
+          data-icon="down"
+        ></button>
+        <button
+          class="icon-btn small"
+          id="find-close"
+          type="button"
+          aria-label="Close find"
+          data-icon="close"
+        ></button>
+      </div>
+      <div class="findbar-row">
+        <input id="replace-input" type="text" placeholder="Replace with" autocomplete="off" />
+        <button class="text-btn" id="replace-one" type="button">Replace</button>
+        <button class="text-btn" id="replace-all" type="button">All</button>
+      </div>
+      <div class="findbar-row findbar-options">
+        <label><input type="checkbox" id="find-case" /> Match case</label>
+        <label><input type="checkbox" id="find-word" /> Whole word</label>
+        <label><input type="checkbox" id="find-regexp" /> Regex</label>
+      </div>
+    </div>
+
+    <main class="scroller" id="scroller">
+      <div id="editor"></div>
+    </main>
+    <textarea id="source" class="source" hidden spellcheck="false" autocapitalize="off"></textarea>
+
+    <nav class="toolbar" id="toolbar" aria-label="Formatting"></nav>
+
+    <div class="scrim" id="scrim" hidden></div>
+    <aside class="drawer" id="drawer" aria-label="Menu">
+      <div class="drawer-header">
+        <div class="drawer-brand">MarkText</div>
+        <div class="drawer-sub" id="drawer-stats"></div>
+      </div>
+      <div class="drawer-section">
+        <button class="drawer-item" type="button" data-action="new" data-icon="note">
+          New document
+        </button>
+        <button class="drawer-item" type="button" data-action="open" data-icon="folder">
+          Open…
+        </button>
+        <button class="drawer-item" type="button" data-action="save" data-icon="save">Save</button>
+        <button class="drawer-item" type="button" data-action="save-as" data-icon="save-as">
+          Save as…
+        </button>
+      </div>
+      <div class="drawer-section">
+        <button class="drawer-item" type="button" data-action="outline" data-icon="toc">
+          Outline
+        </button>
+        <button class="drawer-item" type="button" data-action="export-html" data-icon="html">
+          Export as HTML…
+        </button>
+        <button class="drawer-item" type="button" data-action="share" data-icon="share">
+          Share markdown
+        </button>
+      </div>
+      <div class="drawer-section" id="recent-section" hidden>
+        <div class="drawer-label">Recent</div>
+        <div id="recent-list"></div>
+      </div>
+      <div class="drawer-section">
+        <button class="drawer-item" type="button" data-action="settings" data-icon="settings">
+          Settings
+        </button>
+        <button class="drawer-item" type="button" data-action="about" data-icon="info">
+          About
+        </button>
+      </div>
+    </aside>
+
+    <dialog id="sheet" class="sheet">
+      <div class="sheet-title" id="sheet-title"></div>
+      <div class="sheet-body" id="sheet-body"></div>
+    </dialog>
+
+    <dialog id="settings" class="sheet">
+      <div class="sheet-title">Settings</div>
+      <form class="sheet-body settings-form" id="settings-form" method="dialog">
+        <label class="setting">
+          <span>Theme</span>
+          <select name="theme">
+            <option value="system">Follow system</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </label>
+        <label class="setting">
+          <span>Font size <output name="fontSizeOut"></output></span>
+          <input type="range" name="fontSize" min="12" max="26" step="1" />
+        </label>
+        <label class="setting">
+          <span>Line height <output name="lineHeightOut"></output></span>
+          <input type="range" name="lineHeight" min="1.2" max="2.2" step="0.1" />
+        </label>
+        <label class="setting toggle"
+          ><span>Auto-save to file</span><input type="checkbox" name="autoSave"
+        /></label>
+        <label class="setting toggle"
+          ><span>Focus mode</span><input type="checkbox" name="focusMode"
+        /></label>
+        <label class="setting toggle"
+          ><span>Spellcheck</span><input type="checkbox" name="spellcheckEnabled"
+        /></label>
+        <label class="setting toggle"
+          ><span>Wrap code blocks</span><input type="checkbox" name="wrapCodeBlocks"
+        /></label>
+        <label class="setting toggle"
+          ><span>Code block line numbers</span><input type="checkbox" name="codeBlockLineNumbers"
+        /></label>
+        <label class="setting toggle"
+          ><span>Auto-pair brackets &amp; syntax</span><input type="checkbox" name="autoPair"
+        /></label>
+        <label class="setting toggle"
+          ><span>Front matter</span><input type="checkbox" name="frontMatter"
+        /></label>
+        <label class="setting toggle"
+          ><span>Math ($…$)</span><input type="checkbox" name="math"
+        /></label>
+        <label class="setting toggle"
+          ><span>Footnotes</span><input type="checkbox" name="footnote"
+        /></label>
+        <label class="setting">
+          <span>Bullet list marker</span>
+          <select name="bulletListMarker">
+            <option value="-">-</option>
+            <option value="*">*</option>
+            <option value="+">+</option>
+          </select>
+        </label>
+        <div class="sheet-actions">
+          <button class="text-btn" value="close">Done</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="snackbar" id="snackbar" role="status" aria-live="polite"></div>
+
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

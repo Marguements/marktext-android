@@ -57,6 +57,19 @@ importers:
         specifier: ^10.4.1
         version: 10.4.1(eslint@9.39.4(jiti@2.7.0))
 
+  packages/android:
+    dependencies:
+      '@muyajs/core':
+        specifier: workspace:*
+        version: link:../muya
+    devDependencies:
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.0.16
+        version: 8.0.16(@types/node@26.0.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.16.9)(tsx@4.22.4)(yaml@2.9.0)
+
   packages/desktop:
     dependencies:
       '@electron-toolkit/preload':

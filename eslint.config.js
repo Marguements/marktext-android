@@ -29,6 +29,8 @@ export default [
       // ts/no-explicit-any), so we keep them isolated rather than try to
       // merge two flat configs.
       'packages/muya/**',
+      // Vite output copied into the APK's assets.
+      'packages/android/app/src/main/assets/www/**',
       'packages/desktop/src/renderer/src/assets/symbolIcon/index.js',
       '**/*.min.json',
       // Playwright writes these next to its config (packages/desktop/), not at
