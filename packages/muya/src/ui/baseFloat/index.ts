@@ -1,7 +1,7 @@
 import type { Placement, ReferenceElement } from '@floating-ui/dom';
 import type { Muya } from '../../index';
 import type { IBaseOptions } from '../types';
-import { autoUpdate, computePosition, flip, offset } from '@floating-ui/dom';
+import { autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom';
 import { EVENT_KEYS } from '../../config';
 
 import { isHTMLElement, isKeyboardEvent, noop } from '../../utils';
@@ -22,6 +22,9 @@ function defaultOptions() {
 }
 
 const BUTTON_GROUP = ['mu-table-drag-bar', 'mu-front-button'];
+
+// Minimum gap, in px, between a float and the viewport edge it is shifted away from.
+const VIEWPORT_PADDING = 8;
 
 abstract class BaseFloat {
     protected options: IBaseOptions;
@@ -169,7 +172,10 @@ abstract class BaseFloat {
         const cleanup = autoUpdate(reference, floatBox, () => {
             computePosition(reference, floatBox, {
                 placement,
-                middleware: [offset(offsetOptions), flip()],
+                // `flip()` only changes side on the main axis; `shift()` slides
+                // the float along the cross axis so a toolbar or menu anchored
+                // near a screen edge (common on phones) stays fully visible.
+                middleware: [offset(offsetOptions), flip(), shift({ padding: VIEWPORT_PADDING })],
             }).then(({ x, y }) => {
                 // `computePosition` is async: a `hide()` (or a newer `show()`)
                 // can land before this resolves. Applying it then would set
