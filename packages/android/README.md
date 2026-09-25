@@ -55,6 +55,11 @@ packages/android/
 The page talks to Kotlin through `WebViewCompat.addWebMessageListener`,
 limited to the app's own `https://appassets.androidplatform.net` origin.
 
+Contributor docs: [`CLAUDE.md`](CLAUDE.md) (architecture and conventions),
+[`docs/BRIDGE.md`](docs/BRIDGE.md), [`docs/DESIGN.md`](docs/DESIGN.md) and
+[`docs/ROADMAP.md`](docs/ROADMAP.md). Work is tracked in the Linear project
+[MarkText Android](https://linear.app/arguelab/project/marktext-android-60d33f0228d1).
+
 ## Build locally
 
 Prerequisites: Node 22 + pnpm (see the repo root), JDK 17, and the Android SDK
