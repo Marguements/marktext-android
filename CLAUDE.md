@@ -2,6 +2,23 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## This fork: MarkText for Android
+
+This repository is **`Marguements/marktext-android`**, a fork of MarkText whose
+focus is the Android app in `packages/android/`. Everything below still
+describes the shared monorepo (desktop, muya, website); for Android work:
+
+- Read **`packages/android/CLAUDE.md`** first (architecture, commands,
+  invariants), plus `packages/android/docs/` (`BRIDGE.md`, `DESIGN.md`,
+  `ROADMAP.md`).
+- Work is tracked in **Linear**, project
+  [MarkText Android](https://linear.app/arguelab/project/marktext-android-60d33f0228d1)
+  (team "Mat Argue", issue keys `MAT-n`). Start from a Linear issue, keep PRs to
+  its scope, and file new findings as Backlog issues. The `/linear-task [MAT-n]`
+  skill (`.claude/skills/linear-task/`) walks through the workflow.
+- PRs target this fork's `develop` branch and reference the `MAT-n` key.
+- Changes to `packages/muya` affect the desktop app too; keep desktop working.
+
 # MarkText
 
 ## Project Overview
