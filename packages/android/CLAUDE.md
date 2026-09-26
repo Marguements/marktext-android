@@ -14,7 +14,7 @@ sharing, system bars, insets and the back gesture.
 ```
 web/ (TypeScript, Vite)          bridge (JSON messages)         app/ (Kotlin)
 ┌───────────────────────┐   MarkTextAndroid.postMessage   ┌───────────────────────┐
-│ main.ts   editor UI   │ ──────────────────────────────▶ │ NativeBridge.kt       │
+│ main.ts + modules  UI │ ──────────────────────────────▶ │ NativeBridge.kt       │
 │ native.ts bridge API  │ ◀────────────────────────────── │  dispatch + pickers   │
 │ style.css app chrome  │      replyProxy.postMessage     │ Documents.kt  SAF I/O │
 │ index.html            │                                 │ MainActivity.kt host  │
@@ -24,7 +24,15 @@ web/ (TypeScript, Vite)          bridge (JSON messages)         app/ (Kotlin)
 | File | Owns |
 |---|---|
 | `web/index.html` | Static chrome: app bar, find bar, drawer, sheet + settings dialogs, snackbar |
-| `web/src/main.ts` | Settings/session/recent persistence, Muya setup, change tracking, file commands, toolbar, find/replace, drawer, settings, keyboard shortcuts, boot |
+| `web/src/main.ts` | Wiring only: native callbacks, app-bar buttons, keyboard shortcuts, `__mtHandleBack` / `__mtOnPause`, boot |
+| `web/src/state.ts` | Settings, session and recent files + their `localStorage` persistence; DOM-free |
+| `web/src/editor.ts` | Muya plugins, create/rebuild, source mode, change tracking, title |
+| `web/src/files.ts` | New/open/save/save-as/export/share, recent-file opening, auto-save |
+| `web/src/toolbar.ts` | Formatting toolbar and its block-type / insert sheets |
+| `web/src/find.ts` | Find & replace bar |
+| `web/src/drawer.ts` | Drawer, recent list, outline, about |
+| `web/src/settings.ts` | Theme and the settings dialog |
+| `web/src/ui.ts` | `$`, snackbar/`reportError`, bottom sheet, `keepEditorFocus` |
 | `web/src/native.ts` | Typed bridge client + browser fallbacks. The **only** place the page talks to Kotlin |
 | `web/src/style.css` | Design tokens (`--app-*`) and Muya dark-theme overrides |
 | `web/src/icons.ts` | Material Symbols path data; `icon(name)` / `data-icon` hydration |
@@ -33,6 +41,9 @@ web/ (TypeScript, Vite)          bridge (JSON messages)         app/ (Kotlin)
 | `app/.../NativeBridge.kt` | Message dispatch, file/image pickers, intents (VIEW/EDIT/SEND), share, system bars |
 | `app/.../Documents.kt` | Blocking SAF read/write, size caps; always called on the `io` executor |
 | `vite.config.ts` | Builds `web/` into `app/src/main/assets/www/` (git-ignored) |
+
+Web modules do no DOM work when imported: each exposes an `init*()` that
+`main.ts` calls, so modules can be imported by unit tests without booting the page.
 
 Deeper references:
 - `docs/BRIDGE.md` — message protocol, method catalog, how to add a method.
