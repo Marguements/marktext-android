@@ -27,7 +27,7 @@ Replies to a request:
 ```
 
 `cancelled` becomes a `CancelledError` in the page, which `reportError` in
-`main.ts` ignores (the user backed out of a picker).
+`ui.ts` ignores (the user backed out of a picker).
 
 Unsolicited events:
 

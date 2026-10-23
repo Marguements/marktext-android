@@ -45,7 +45,7 @@ All colours and sizes come from CSS custom properties in `web/src/style.css`:
 - Minimum touch target 48×48dp (some existing controls are 40–42px — fix when
   touched; tracked in MAT-29).
 - Any button that acts on the editor must not steal focus: wrap it with
-  `keepEditorFocus()` in `main.ts` (prevents `pointerdown` default) or the
+  `keepEditorFocus()` from `ui.ts` (prevents `pointerdown` default) or the
   selection collapses and the keyboard closes.
 - Show pressed state with `--app-pressed`; show active formatting with
   `--app-accent-soft`.

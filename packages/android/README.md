@@ -42,7 +42,7 @@ Images picked from the gallery are embedded as `data:` URLs because a
 packages/android/
   package.json         pnpm workspace package "marktext-android" (web layer)
   vite.config.ts       builds web/ into app/src/main/assets/www/
-  web/                 editor UI: index.html, src/main.ts, src/native.ts
+  web/                 editor UI: index.html, src/*.ts (main.ts boots; native.ts is the bridge)
   settings.gradle.kts  Gradle project root (open this folder in Android Studio)
   app/                 Kotlin shell
     src/main/java/me/marktext/android/
